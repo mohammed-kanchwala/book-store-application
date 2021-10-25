@@ -14,7 +14,15 @@ spring:
     spring.h2.console.settings.web-allow-others: false
   banner:
     charset: UTF-8
-    location:  classpath:banner.txt
+    location: classpath:banner.txt
+
+  # Log Configuration
+logging:
+  file: /app/book-store-application/logs
+  level:
+    root: INFO
+    org.springframework.web: ERROR
+    com.emirates: DEBUG
 
 promocodes:
   promos:

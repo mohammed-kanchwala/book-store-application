@@ -10,20 +10,23 @@ import com.emirates.entity.Book;
 import com.emirates.model.BookRequest;
 import com.emirates.model.CheckoutRequest;
 
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 public interface BookService {
 
-	List<Book> findAllBooks();
+	Flux<Book> findAllBooks();
 
-	List<Book> findBook(Map<String, String> requestParam);
+	Flux<Book> findBook(Map<String, String> requestParam);
 
-	Optional<Book> findBookById(Integer bookId);
+	Mono<Book> findBookById(Integer bookId);
 
-	String addBook(List<BookRequest> book);
+	Mono<String> addBook(List<BookRequest> book);
 
-	String updateBook(Integer bookId, @Valid BookRequest bookRequest);
+	Mono<String> updateBook(Integer bookId, @Valid BookRequest bookRequest);
 
-	void deleteBook(Integer bookId);
+	Mono<String> deleteBook(Integer bookId);
 
-	Double checkout(CheckoutRequest request);
+	Mono<Double> checkout(CheckoutRequest request);
 
 }

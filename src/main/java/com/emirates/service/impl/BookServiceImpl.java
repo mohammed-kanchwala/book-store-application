@@ -28,6 +28,8 @@ import com.emirates.repository.BookRepository;
 import com.emirates.service.BookService;
 
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.exact;
 
 @Service
@@ -41,13 +43,12 @@ public class BookServiceImpl implements BookService {
 	private ApplicationProps applicationProps;
 
 	@Override
-	public List<Book> findAllBooks() {
-		return StreamSupport.stream(repository.findAll().spliterator(), false)
-				.collect(Collectors.toList());
+	public Flux<Book> findAllBooks() {
+		return Flux.fromIterable(repository.findAll());
 	}
 
 	@Override
-	public List<Book> findBook(Map<String, String> requestParam) {
+	public Flux<Book> findBook(Map<String, String> requestParam) {
 		String name = requestParam.getOrDefault("name", null);
 		String description = requestParam.getOrDefault("description", null);
 		String author = requestParam.getOrDefault("author", null);
@@ -70,17 +71,16 @@ public class BookServiceImpl implements BookService {
 				.withMatcher("price", exact());
 
 		Example<Book> example = Example.of(book, matcher);
-		return StreamSupport.stream(repository.findAll(example).spliterator(), false)
-				.collect(Collectors.toList());
+		return Flux.fromIterable(repository.findAll(example));
 	}
 
 	@Override
-	public Optional<Book> findBookById(Integer bookId) {
-		return repository.findById(bookId);
+	public Mono<Book> findBookById(Integer bookId) {
+		return Mono.just(repository.findById(bookId).orElseGet(Book::new));
 	}
 
 	@Override
-	public String addBook(List<BookRequest> book) {
+	public Mono<String> addBook(List<BookRequest> book) {
 		List<Book> entityList = new ArrayList<>();
 		book.forEach(bookRequest -> {
 			Book entity = Book.builder().build();
@@ -88,11 +88,11 @@ public class BookServiceImpl implements BookService {
 			entityList.add(entity);
 		});
 		repository.saveAll(entityList);
-		return "Book(s) Added Successfully !!";
+		return Mono.just("Book(s) Added Successfully !!");
 	}
 
 	@Override
-	public String updateBook(Integer bookId, @Valid BookRequest bookRequest) {
+	public Mono<String> updateBook(Integer bookId, @Valid BookRequest bookRequest) {
 
 		Optional<Book> optionalBook = repository.findById(bookId)
 				.map(blogs -> repository.save(Book.builder()
@@ -105,19 +105,20 @@ public class BookServiceImpl implements BookService {
 						.isbn(bookRequest.getIsbn())
 						.build()));
 		if (optionalBook.isPresent()) {
-			return "Book Updated !!!";
+			return Mono.just("Book Updated !!!");
 		} else {
-			return "Oops, The Book does not exist.";
+			return Mono.just("Oops, The Book does not exist.");
 		}
 	}
 
 	@Override
-	public void deleteBook(Integer bookId) {
+	public Mono<String> deleteBook(Integer bookId) {
 		repository.deleteById(bookId);
+		return Mono.just("Book Deleted Successfully !!");
 	}
 
 	@Override
-	public Double checkout(CheckoutRequest request) {
+	public Mono<Double> checkout(CheckoutRequest request) {
 
 		List<Book> bookList = StreamSupport.stream(
 						repository.findAllById(request.getBookIds()).spliterator(), false)
@@ -131,7 +132,7 @@ public class BookServiceImpl implements BookService {
 						discount == 0.0 ? book.getPrice() : ((book.getPrice() * discount) / 100));
 			}
 		}));
-		return priceList.values().stream().mapToDouble(Double::doubleValue).sum();
+		return Mono.just(priceList.values().stream().mapToDouble(Double::doubleValue).sum());
 	}
 
 	private boolean isBookValidForPromotion(CheckoutRequest request, Book book, Promo promo) {

@@ -12,7 +12,9 @@ spring:
     console.path: /h2-console
     console.settings.trace: true
     spring.h2.console.settings.web-allow-others: false
-
+  banner:
+    charset: UTF-8
+    location:  classpath:banner.txt
 
 promocodes:
   promos:

@@ -1,0 +1,26 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:book-store;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+    driverClassName: org.h2.Driver
+  jpa:
+    spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
+    hibernate.ddl-auto: update
+  h2:
+    console.enable: true
+    console.path: /h2-console
+    console.settings.trace: true
+    spring.h2.console.settings.web-allow-others: false
+
+
+promocodes:
+  promos:
+    - promocode: OFFERFIC10
+      bookType: TECHNOLOGY
+      discount: 10
+      expiredate: 28/08/2021
+    - promocode: OFFERFIC10
+      bookType: SCIENCE
+      discount: 0
+      expiredate: 12/09/2021

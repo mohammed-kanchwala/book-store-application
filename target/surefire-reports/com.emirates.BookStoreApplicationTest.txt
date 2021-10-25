@@ -1,0 +1,16 @@
+-------------------------------------------------------------------------------
+Test set: com.emirates.BookStoreApplicationTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 3.351 s <<< FAILURE! - in com.emirates.BookStoreApplicationTest
+contextLoads  Time elapsed: 0 s  <<< ERROR!
+java.lang.IllegalStateException: Failed to load ApplicationContext
+Caused by: org.springframework.beans.factory.BeanCreationException: 
+Error creating bean with name 'dataSourceScriptDatabaseInitializer' defined in class path resource [org/springframework/boot/autoconfigure/sql/init/DataSourceInitializationConfiguration.class]: Invocation of init method failed; nested exception is org.springframework.jdbc.datasource.init.ScriptStatementFailedException: Failed to execute SQL script statement #2 of URL [file:/C:/Mohammed/GitHub/book-store-application/target/classes/data.sql]: INSERT INTO BOOK (name, description, author, bookType, price, isbn) VALUES ('Harry Potter Series', 'Desc', 'J K Rowling', 'Fiction', 29.99, '9781408856772'), ('Angels and Demons', 'Desc', 'Dan Brown', 'Crime Fiction', 39.99, '9780743493468'); nested exception is org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException: NULL not allowed for column "ID"; SQL statement:
+INSERT INTO BOOK (name, description, author, bookType, price, isbn) VALUES ('Harry Potter Series', 'Desc', 'J K Rowling', 'Fiction', 29.99, '9781408856772'), ('Angels and Demons', 'Desc', 'Dan Brown', 'Crime Fiction', 39.99, '9780743493468') [23502-200]
+Caused by: org.springframework.jdbc.datasource.init.ScriptStatementFailedException: 
+Failed to execute SQL script statement #2 of URL [file:/C:/Mohammed/GitHub/book-store-application/target/classes/data.sql]: INSERT INTO BOOK (name, description, author, bookType, price, isbn) VALUES ('Harry Potter Series', 'Desc', 'J K Rowling', 'Fiction', 29.99, '9781408856772'), ('Angels and Demons', 'Desc', 'Dan Brown', 'Crime Fiction', 39.99, '9780743493468'); nested exception is org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException: NULL not allowed for column "ID"; SQL statement:
+INSERT INTO BOOK (name, description, author, bookType, price, isbn) VALUES ('Harry Potter Series', 'Desc', 'J K Rowling', 'Fiction', 29.99, '9781408856772'), ('Angels and Demons', 'Desc', 'Dan Brown', 'Crime Fiction', 39.99, '9780743493468') [23502-200]
+Caused by: org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException: 
+NULL not allowed for column "ID"; SQL statement:
+INSERT INTO BOOK (name, description, author, bookType, price, isbn) VALUES ('Harry Potter Series', 'Desc', 'J K Rowling', 'Fiction', 29.99, '9781408856772'), ('Angels and Demons', 'Desc', 'Dan Brown', 'Crime Fiction', 39.99, '9780743493468') [23502-200]
+

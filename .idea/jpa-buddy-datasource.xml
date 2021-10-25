@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JpbDataSourceConfig">
+    <data-sources>
+      <data-source id="e2fe6206-045d-4f1a-8012-e9c3cd73b0ec" name="book-store" url="jdbc:hsqldb:mem:book-store-application" driverClass="org.hsqldb.jdbc.JDBCDriver" />
+    </data-sources>
+  </component>
+</project>

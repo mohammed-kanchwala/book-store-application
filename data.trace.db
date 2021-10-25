@@ -1,0 +1,9 @@
+2021-10-25 08:40:37 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "BOOK" not found; SQL statement:
+select book0_.id as id1_0_, book0_.author as author2_0_, book0_.book_type as book_typ3_0_, book0_.description as descript4_0_, book0_.isbn as isbn5_0_, book0_.name as name6_0_, book0_.price as price7_0_ from book book0_ [42102-200]
+2021-10-25 08:41:31 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "BOOK" not found; SQL statement:
+select book0_.id as id1_0_, book0_.author as author2_0_, book0_.book_type as book_typ3_0_, book0_.description as descript4_0_, book0_.isbn as isbn5_0_, book0_.name as name6_0_, book0_.price as price7_0_ from book book0_ [42102-200]
+2021-10-25 08:41:37 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "BOOK" not found; SQL statement:
+select book0_.id as id1_0_, book0_.author as author2_0_, book0_.book_type as book_typ3_0_, book0_.description as descript4_0_, book0_.isbn as isbn5_0_, book0_.name as name6_0_, book0_.price as price7_0_ from book book0_ [42102-200]

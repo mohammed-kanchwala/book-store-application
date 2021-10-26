@@ -10,7 +10,6 @@ import lombok.Data;
 @Builder
 public class BookRequest {
 
-	@NotNull
 	@Size(max = 200)
 	private String name;
 
@@ -21,9 +20,7 @@ public class BookRequest {
 
 	private String bookType;
 
-	@NotNull
 	private Double price;
 
-	@NotNull
 	private String isbn;
 }

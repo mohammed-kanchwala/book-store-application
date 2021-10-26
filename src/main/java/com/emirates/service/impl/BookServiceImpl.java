@@ -11,8 +11,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -76,7 +74,8 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	public Mono<Book> findBookById(Integer bookId) {
-		return Mono.just(repository.findById(bookId).orElseGet(Book::new));
+		Optional<Book> book = repository.findById(bookId);
+		return book.map(Mono::just).orElse(null);
 	}
 
 	@Override
@@ -88,24 +87,32 @@ public class BookServiceImpl implements BookService {
 			entityList.add(entity);
 		});
 		repository.saveAll(entityList);
-		return Mono.just("Book(s) Added Successfully !!");
+		return Mono.just(entityList.size() + " - Book(s) Added Successfully !!");
 	}
 
 	@Override
-	public Mono<String> updateBook(Integer bookId, @Valid BookRequest bookRequest) {
+	public Mono<String> updateBook(Integer bookId, BookRequest bookRequest) {
+
 
 		Optional<Book> optionalBook = repository.findById(bookId)
-				.map(blogs -> repository.save(Book.builder()
-						.id(bookId)
-						.name(bookRequest.getName())
-						.description(bookRequest.getDescription())
-						.author(bookRequest.getAuthor())
-						.bookType(bookRequest.getBookType())
-						.price(bookRequest.getPrice())
-						.isbn(bookRequest.getIsbn())
+				.map(book -> repository.save(Book.builder()
+						.id(book.getId())
+						.name(Objects.nonNull(bookRequest.getName()) ? bookRequest.getName() : book.getName())
+						.description(Objects.nonNull(bookRequest.getDescription()) ?
+								bookRequest.getDescription() :
+								book.getDescription())
+						.author(Objects.nonNull(bookRequest.getAuthor()) ?
+								bookRequest.getAuthor() :
+								book.getAuthor())
+						.bookType(Objects.nonNull(bookRequest.getBookType()) ?
+								bookRequest.getBookType() :
+								book.getBookType())
+						.price(
+								Objects.nonNull(bookRequest.getPrice()) ? bookRequest.getPrice() : book.getPrice())
+						.isbn(Objects.nonNull(bookRequest.getIsbn()) ? bookRequest.getIsbn() : book.getIsbn())
 						.build()));
 		if (optionalBook.isPresent()) {
-			return Mono.just("Book Updated !!!");
+			return Mono.just("Book Updated Successfully !!!");
 		} else {
 			return Mono.just("Oops, The Book does not exist.");
 		}

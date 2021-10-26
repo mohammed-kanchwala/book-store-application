@@ -8,13 +8,14 @@
     </appender>
 
     <appender name="FILE-AUDIT" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${logging.file}/book-store-application.log</file>
+        <file>/app/book-store-application/logs/book-store-application.log</file>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%F:M%L] -> %msg%n
             </Pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${logging.file}/archived/book-store-application.%d{yyyy-MM-dd}.%i.log
+            <fileNamePattern>
+                /app/book-store-application/logs/archived/book-store-application.%d{yyyy-MM-dd}.%i.log
             </fileNamePattern>
             <maxFileSize>100MB</maxFileSize>
         </rollingPolicy>

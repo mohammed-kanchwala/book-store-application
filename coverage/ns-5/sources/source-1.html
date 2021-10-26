@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html id="htmlId">
 <head>
-  <title>Coverage Report > BookService</title>
+  <title>Coverage Report > BookRepository</title>
   <style type="text/css">
     @import "../../css/coverage.css";
     @import "../../css/highlight-idea.css";
@@ -17,17 +17,17 @@
 <div class="breadCrumbs">
 Current scope:     <a href="../../index.html">all classes</a>
     <span class="separator">|</span>
-    <a href="../index.html">com.emirates.service</a>
+    <a href="../index.html">com.emirates.repository</a>
 </div>
 
-<h1>Coverage Summary for Class: BookService (com.emirates.service)</h1>
+<h1>Coverage Summary for Class: BookRepository (com.emirates.repository)</h1>
 
 <table class="coverageStats">
 <tr>
   <th class="name">Class</th>
 </tr>
 <tr>
-  <td class="name">BookService</td>
+  <td class="name">BookRepository</td>
 </tr>
 
 </table>
@@ -37,38 +37,20 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 
 <pre>
-<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package com.emirates.service;
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package com.emirates.repository;
 <i class="no-highlight">2</i>&nbsp;
-<i class="no-highlight">3</i>&nbsp;import java.util.List;
-<i class="no-highlight">4</i>&nbsp;import java.util.Map;
-<i class="no-highlight">5</i>&nbsp;import java.util.Optional;
+<i class="no-highlight">3</i>&nbsp;import org.springframework.data.domain.Example;
+<i class="no-highlight">4</i>&nbsp;import org.springframework.data.repository.CrudRepository;
+<i class="no-highlight">5</i>&nbsp;import org.springframework.stereotype.Repository;
 <i class="no-highlight">6</i>&nbsp;
-<i class="no-highlight">7</i>&nbsp;import javax.validation.Valid;
+<i class="no-highlight">7</i>&nbsp;import com.emirates.entity.Book;
 <i class="no-highlight">8</i>&nbsp;
-<i class="no-highlight">9</i>&nbsp;import com.emirates.entity.Book;
-<i class="no-highlight">10</i>&nbsp;import com.emirates.model.BookRequest;
-<i class="no-highlight">11</i>&nbsp;import com.emirates.model.CheckoutRequest;
-<i class="no-highlight">12</i>&nbsp;
-<i class="no-highlight">13</i>&nbsp;import reactor.core.publisher.Flux;
-<i class="no-highlight">14</i>&nbsp;import reactor.core.publisher.Mono;
-<i class="no-highlight">15</i>&nbsp;
-<i class="no-highlight">16</i>&nbsp;public interface BookService {
-<i class="no-highlight">17</i>&nbsp;
-<i class="no-highlight">18</i>&nbsp;	Flux&lt;Book&gt; findAllBooks();
-<i class="no-highlight">19</i>&nbsp;
-<i class="no-highlight">20</i>&nbsp;	Flux&lt;Book&gt; findBook(Map&lt;String, String&gt; requestParam);
-<i class="no-highlight">21</i>&nbsp;
-<i class="no-highlight">22</i>&nbsp;	Mono&lt;Book&gt; findBookById(Integer bookId);
-<i class="no-highlight">23</i>&nbsp;
-<i class="no-highlight">24</i>&nbsp;	Mono&lt;String&gt; addBook(List&lt;BookRequest&gt; book);
-<i class="no-highlight">25</i>&nbsp;
-<i class="no-highlight">26</i>&nbsp;	Mono&lt;String&gt; updateBook(Integer bookId, @Valid BookRequest bookRequest);
-<i class="no-highlight">27</i>&nbsp;
-<i class="no-highlight">28</i>&nbsp;	Mono&lt;String&gt; deleteBook(Integer bookId);
-<i class="no-highlight">29</i>&nbsp;
-<i class="no-highlight">30</i>&nbsp;	Mono&lt;Double&gt; checkout(CheckoutRequest request);
-<i class="no-highlight">31</i>&nbsp;
-<i class="no-highlight">32</i>&nbsp;}
+<i class="no-highlight">9</i>&nbsp;@Repository
+<i class="no-highlight">10</i>&nbsp;public interface BookRepository extends CrudRepository&lt;Book, Integer&gt; {
+<i class="no-highlight">11</i>&nbsp;
+<i class="no-highlight">12</i>&nbsp;	Iterable&lt;Book&gt; findAll(Example&lt;Book&gt; example);
+<i class="no-highlight">13</i>&nbsp;
+<i class="no-highlight">14</i>&nbsp;}
 </div>
 </pre>
 </div>
@@ -95,7 +77,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2021-10-26 18:37</div>
+    <div style="float:right;">generated on 2021-10-26 18:53</div>
 </div>
 </body>
 </html>

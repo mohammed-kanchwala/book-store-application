@@ -132,7 +132,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 <i class="no-highlight">57</i>&nbsp;
 <i class="no-highlight">58</i>&nbsp;	@PutMapping(path = &quot;/books/{bookId}&quot;)
 <i class="no-highlight">59</i>&nbsp;	public Mono&lt;String&gt; updateBook(@PathVariable Integer bookId,
-<i class="no-highlight">60</i>&nbsp;			@RequestBody BookRequest bookRequest) {
+<i class="no-highlight">60</i>&nbsp;			@Valid @RequestBody BookRequest bookRequest) {
 <b class="fc"><i class="no-highlight">61</i>&nbsp;		return bookService.updateBook(bookId, bookRequest);</b>
 <i class="no-highlight">62</i>&nbsp;	}
 <i class="no-highlight">63</i>&nbsp;
@@ -173,7 +173,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2021-10-26 18:37</div>
+    <div style="float:right;">generated on 2021-10-26 18:53</div>
 </div>
 </body>
 </html>

@@ -1,7 +1,11 @@
 package com.emirates.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,11 +22,14 @@ import org.springframework.util.Assert;
 
 import com.emirates.entity.Book;
 import com.emirates.model.BookRequest;
+import com.emirates.model.CheckoutRequest;
 import com.emirates.service.BookService;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 
@@ -41,14 +48,38 @@ class BookControllerTest {
 	@BeforeEach
 	void setUp() {
 		this.bookList = new ArrayList<>();
-		this.bookList.add(
-				Book.builder().name("Tech 1").bookType("Technology").price(0.99).author("T 1").build());
-		this.bookList.add(
-				Book.builder().name("Tech 2").bookType("Technology").price(1.99).author("T 2").build());
-		this.bookList.add(
-				Book.builder().name("Science 1").bookType("Science").price(0.99).author("S 1").build());
-		this.bookList.add(
-				Book.builder().name("Science 2").bookType("Science").price(1.99).author("S 1").build());
+		this.bookList.add(Book.builder()
+				.id(1)
+				.name("Tech 1")
+				.bookType("Technology")
+				.price(10.00)
+				.author("T 1")
+				.isbn("9781111")
+				.build());
+		this.bookList.add(Book.builder()
+				.id(2)
+				.name("Tech 2")
+				.bookType("Technology")
+				.price(10.00)
+				.author("T 2")
+				.isbn("9782222")
+				.build());
+		this.bookList.add(Book.builder()
+				.id(3)
+				.name("Science 1")
+				.bookType("Science")
+				.price(20.00)
+				.author("S 1")
+				.isbn("9703333")
+				.build());
+		this.bookList.add(Book.builder()
+				.id(4)
+				.name("Science 2")
+				.bookType("Science")
+				.price(20.00)
+				.author("S 2")
+				.isbn("9702222")
+				.build());
 	}
 
 	@Test
@@ -67,6 +98,7 @@ class BookControllerTest {
 					assertNotNull(response);
 					Assert.isTrue(response.get(0).getName().equals("Tech 1"), "name not equal");
 					Assert.isTrue(response.get(0).getBookType().equals("Technology"), "book type not equal");
+					assertEquals(4, response.size());
 				});
 	}
 
@@ -258,6 +290,123 @@ class BookControllerTest {
 		webTestClient.delete()
 				.uri("/api/book-store/books/1")
 				.accept(MediaType.APPLICATION_JSON)
+				.exchange()
+				.expectStatus()
+				.is5xxServerError();
+	}
+
+	@Test
+	@DisplayName("Get Book(s) based on (name) Successfully")
+	void shouldReturnBooksBasedOnName() {
+		Map<String, String> requestParam = new HashMap<>();
+		requestParam.put("name", "1");
+		when(service.findBook(requestParam)).thenReturn(
+				Flux.fromIterable(Collections.singletonList(bookList.get(2))));
+
+		webTestClient.get()
+				.uri(uriBuilder -> uriBuilder.path("/api/book-store/books/search")
+						.queryParam("name", "1")
+						.build())
+				.exchange()
+				.expectStatus()
+				.isOk()
+				.expectBodyList(Book.class)
+				.value(response -> {
+					assertNotNull(response);
+					Assert.isTrue(response.get(0).getName().equalsIgnoreCase("Science 1"), "name not equal");
+					Assert.isTrue(response.get(0).getBookType().equalsIgnoreCase("Science"),
+							"bookType not equal");
+				});
+	}
+
+	@Test
+	@DisplayName("Get Books based on Empty Params Successfully")
+	void shouldReturnsAllBooksBasedOnName() {
+		Map<String, String> requestParam = new HashMap<>();
+		when(service.findBook(requestParam)).thenReturn(Flux.fromIterable(bookList));
+
+		webTestClient.get()
+				.uri(uriBuilder -> uriBuilder.path("/api/book-store/books/search").build())
+				.exchange()
+				.expectStatus()
+				.isOk()
+				.expectBodyList(Book.class)
+				.value(response -> {
+					assertNotNull(response);
+					assertEquals(4, response.size());
+				});
+	}
+
+	@Test
+	@DisplayName("Get Book(s) based on (name) Return Empty List")
+	void shouldReturnEmptyListOnSearchBasedOnName() {
+		Map<String, String> requestParam = new HashMap<>();
+		requestParam.put("name", "Test");
+		when(service.findBook(requestParam)).thenReturn(Flux.fromIterable(new ArrayList<>()));
+
+		webTestClient.get()
+				.uri(uriBuilder -> uriBuilder.path("/api/book-store/books/search")
+						.queryParam("name", "Test")
+						.build())
+				.exchange()
+				.expectStatus()
+				.isOk()
+				.expectBodyList(Book.class)
+				.value(response -> assertTrue(response.isEmpty()));
+	}
+
+	@Test
+	@DisplayName("Get Book(s) based on (name) Returns Error")
+	void shouldReturnErrorOnSearchBasedOnName() {
+		Map<String, String> requestParam = new HashMap<>();
+		requestParam.put("name", "Test");
+		when(service.findBook(requestParam)).thenReturn(Flux.error(new Exception("Error")));
+
+		webTestClient.get()
+				.uri(uriBuilder -> uriBuilder.path("/api/book-store/books/search")
+						.queryParam("name", "Test")
+						.build())
+				.exchange()
+				.expectStatus()
+				.is5xxServerError();
+	}
+
+	@Test
+	@DisplayName("Checkout Book(s) with Promocode Successfully")
+	void shouldCheckoutBooksBasedOnPromocode() {
+
+		CheckoutRequest request = new CheckoutRequest();
+		request.setBookIds(Arrays.asList(3, 4));
+		request.setPromocode("OFFERFIC10");
+		when(service.checkout(request)).thenReturn(Mono.just(40.00));
+
+		webTestClient.post()
+				.uri("/api/book-store/books/checkout")
+				.accept(MediaType.APPLICATION_JSON)
+				.body(Mono.just(request), CheckoutRequest.class)
+				.exchange()
+				.expectStatus()
+				.isOk()
+				.expectBody(Double.class)
+				.value(response -> {
+					assertNotNull(response);
+					assertEquals(40.00, response);
+				});
+	}
+
+	@Test
+	@DisplayName("Checkout Book(s) with Promocode Returns Error")
+	void shouldReturnErrorOnCheckoutBooksBasedOnPromocode() {
+
+		CheckoutRequest request = new CheckoutRequest();
+		request.setBookIds(Arrays.asList(3, 4));
+		request.setPromocode("OFFERFIC10");
+		when(service.checkout(request)).thenReturn(Mono.error(new Exception("Error")));
+
+		webTestClient.post()
+				.uri("/api/book-store/books/checkout")
+				.accept(MediaType.APPLICATION_JSON)
+				.body(Mono.just(request), CheckoutRequest.class)
 				.exchange()
 				.expectStatus()
 				.is5xxServerError();
